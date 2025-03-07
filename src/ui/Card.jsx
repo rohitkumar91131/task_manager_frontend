@@ -17,7 +17,7 @@ export default function Login_Signup_Card({formName ,accountAlready}){
         e.preventDefault();
         const {confirmPassword, ...dataToSend} = formData;
         try{
-            let res = await fetch(`http://localhost:4000/${formName.toLowerCase()}`,{
+            let res = await fetch(`https://authentication-backend-kappa.vercel.app/${formName.toLowerCase()}`,{
                 method:"POST",
                 "credentials":"include",
                 body : JSON.stringify(dataToSend),

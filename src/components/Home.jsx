@@ -5,7 +5,7 @@ import {ToastContainer,toast} from 'react-toastify'
 export default function Home(){
     const [user,setUser ] = useState([]);
     async function verify(){
-        let res = await fetch("http://localhost:4000/verifyToken",{
+        let res = await fetch("https://authentication-backend-kappa.vercel.app/verifyToken",{
             method :"GET",
             credentials :'include'
         });
@@ -18,7 +18,7 @@ export default function Home(){
     }
     const handleLogout = async()=>{
       try{
-            let res =  await fetch("http://localhost:4000/logout",{
+            let res =  await fetch("https://authentication-backend-kappa.vercel.app/logout",{
                method : "POST",
               credentials : "include"
            });
