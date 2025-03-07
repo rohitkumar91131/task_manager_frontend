@@ -4,7 +4,7 @@ import Card from '../ui/Card'
 export default function Signup(){
     return (
         <div className=''>
-          < Card formName="Signup" accountAlready="true"/>
+          < Card formName="signup" accountAlready={true}/>
         </div>
     )
 }

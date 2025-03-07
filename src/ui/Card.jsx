@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {useRef} from 'react'
+import {ToastContainer,toast} from 'react-toastify'
 
 export default function Login_Signup_Card({formName ,accountAlready}){
     const [formData,setFormData] =useState({
@@ -12,9 +13,30 @@ export default function Login_Signup_Card({formName ,accountAlready}){
     })
     const inputRef = useRef(null)
     const [passwordSame,setPasswordSame] = useState(true)
-    const handleSubmit =(e) =>{
-        //e.preventDefault();
-        //alert("Form submitted " + JSON.stringify(formData))
+    const handleSubmit =async(e) =>{
+        e.preventDefault();
+        const {confirmPassword, ...dataToSend} = formData;
+        try{
+            let res = await fetch(`http://localhost:4000/${formName.toLowerCase()}`,{
+                method:"POST",
+                "credentials":"include",
+                body : JSON.stringify(dataToSend),
+                headers : {
+                    "content-type" :"application/json"
+                }
+            });
+            // if(!res.ok){
+            //    throw new Error("Failed to connect server")  
+            // }
+            let data = await res.json();
+            
+            const toastMessage = data.msg;
+            toast(toastMessage);
+        }
+        catch(err){
+            let r = err.message;
+            toast(r);
+        }
     }
     const handleChange =(e) =>{
         setFormData(prev=>({
@@ -31,12 +53,12 @@ export default function Login_Signup_Card({formName ,accountAlready}){
         inputRef.current.focus();
     },[])
     return (
-        <form className="w-screen h-screen p-8  space-y-10 border border-3 "  onSubmit={handleSubmit} >
+        <form className="w-screen h-screen p-8  space-y-5 border border-3 "  onSubmit={handleSubmit} >
             <div >
                <h1 className="text-center font-bold text-lg">{formName} Form</h1>    
             </div>
             <div className="space-y-10 flex flex-col">
-            <div className="flex flex-col">
+            <div className="flex flex-col h-[80%]">
                     <label 
                         htmlFor="name" 
                         className="peer-focus:text-red-500 transition-all"   
@@ -81,9 +103,6 @@ export default function Login_Signup_Card({formName ,accountAlready}){
                         required
                         className="peer border border-black p-1 rounded-md focus:outline-none focus:ring focus:ring-black "
                     />
-                    {
-                        !passwordSame && <h1 className="text-red-600 font-semibold ">Password and confirm password are not same</h1>
-                    }
                 </div>                
                 <div className="flex flex-col">
                     <label 
@@ -99,13 +118,18 @@ export default function Login_Signup_Card({formName ,accountAlready}){
                         onChange={handleChange}
                         className="peer border border-black p-1 rounded-md focus:outline-none focus:ring focus:ring-black "
                     />
+                    <div className="h-5">
+                    {
+                        !passwordSame && <h1 className="text-red-600 font-semibold ">Password and confirm password are not same</h1>
+                    }
+                    </div>
                 </div>
-                <button className="border w-20 bg-red-500 rounded-md  p-2 hover:text-lg transition-all">{formName}</button>
+                <button disabled={!passwordSame} className={`w-30 bg-red-500 border rounded-md p-3 ${!passwordSame ? "cursor-not-allowed opacity-50": "text-white" }`} >{formName}</button>
+                <ToastContainer position="top-right" autoClose={3000} />
                 {
-                accountAlready === "true" && <h1 className="text-sm">Already have an account <Link className="font-semibold text-red-500" to='/login'>Login here</Link> </h1>
-                }
-                {
-                accountAlready ==="false" && <h1 className="text-sm">Don't have an account <Link className="font-semibold text-red-500" to="/signup">Singup here </Link></h1>
+                    accountAlready ? 
+                    <h1 className="text-sm">Already have an account <Link className="font-semibold text-red-500" to='/login'>Login here</Link> </h1> :
+                    <h1 className="text-sm">Don't have an account <Link className="font-semibold text-red-500" to="/signup">Singup here </Link></h1>
                 }
             </div>
         </form>
