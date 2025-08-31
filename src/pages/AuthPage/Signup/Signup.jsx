@@ -1,9 +1,8 @@
-
-
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
-
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -13,24 +12,45 @@ export default function Signup() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const { setIsLoginPageInWidow } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Signup data:", formData);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/user/signup`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      const data = await res.json();
+      if (!data.success) {
+        toast(data.msg);
+        return;
+      }
+      toast(data.msg);
+      setIsLoginPageInWidow(true);
+    } catch (err) {
+      toast(err.message);
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex items-center justify-center h-[100dvh] w-[100dvw] bg-gray-50 px-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md space-y-5"
+        className="bg-white  shadow-lg rounded-2xl p-6 sm:p-8 w-full max-w-md space-y-5"
       >
-        <h2 className="text-2xl font-bold text-center text-purple-600">
-          Create an Account
+        <h2 className="text-xl  font-bold text-center text-purple-600 ">
+          Create an Account on TaskBuddy
         </h2>
 
         <div>
@@ -40,8 +60,9 @@ export default function Signup() {
             name="name"
             value={formData.name}
             onChange={handleChange}
+            required
             placeholder="Enter your full name"
-            className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
         </div>
 
@@ -51,9 +72,10 @@ export default function Signup() {
             type="text"
             name="username"
             value={formData.username}
+            required
             onChange={handleChange}
             placeholder="Choose a username"
-            className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
         </div>
 
@@ -65,8 +87,9 @@ export default function Signup() {
               name="password"
               value={formData.password}
               onChange={handleChange}
+              required
               placeholder="Create a password"
-              className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 pr-10"
+              className="w-full p-2.5 sm:p-3 text-sm sm:text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 pr-10"
             />
             <button
               type="button"
@@ -80,12 +103,12 @@ export default function Signup() {
 
         <button
           type="submit"
-          className="w-full py-3 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition"
+          className="w-full py-2.5 sm:py-3 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition text-sm sm:text-base"
         >
           Sign Up
         </button>
 
-        <p className="text-sm text-center text-gray-600">
+        <p className="text-xs sm:text-sm text-center text-gray-600">
           Already have an account?{" "}
           <span
             onClick={() => setIsLoginPageInWidow(true)}

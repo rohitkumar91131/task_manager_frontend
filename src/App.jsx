@@ -1,4 +1,4 @@
-
+import { ToastContainer } from "react-toastify";
 import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import Home from './pages/HomePage/Home'
 import Auth from './pages/AuthPage/Auth'
@@ -6,14 +6,24 @@ import Header from './Ui/Header'
 import { TaskProvider } from './context/TaskContext'
 import { AuthProvider } from './context/AuthContext'
 import Profile from './pages/Profile/Profile'
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 export default function App(){
   return (
     <BrowserRouter>
     <AuthProvider>
     <TaskProvider>
-    <Header/>
+    <ToastContainer 
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
        <Routes>
-          <Route path='/' element={<Home/>} />
+          <Route path='/' element={<ProtectedRoute><Home/> </ProtectedRoute>} />
           <Route  path='/auth' element={<Auth/>}/>
           <Route path='/profile' element={<Profile/>} />
        </Routes>

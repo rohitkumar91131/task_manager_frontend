@@ -4,3 +4,6 @@ body{
     width: 100dvw;
     overflow-x: hidden;
 }
+*{
+    scrollbar-width: none;
+}
