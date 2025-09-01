@@ -6,7 +6,7 @@ import Header from './Ui/Header'
 import { TaskProvider } from './context/TaskContext'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
-import LandingPage from "./pages/AuthPage/LandingPage/LandingPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 export default function App(){
   return (
     <BrowserRouter>
