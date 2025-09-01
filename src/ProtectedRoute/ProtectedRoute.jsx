@@ -1,56 +1,77 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 
-function ProtectedRoute({children}) {
-    const navigate = useNavigate();
-    const { setIsLoginPageInWidow } = useAuth();
-    useEffect(()=>{
-        async function checkLoggedInStatus(){
-            try{
-                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/logged_in_status`,{
-                    method : "GET",
-                    "credentials" : "include"
-                })
-                let data = await res.json();
-                if(!data.success){
-                    if(data.msg === "no_access_token"){
-                        grantAccessToken()
-                    }
-                    toast(data.msg)
-                    navigate("/auth")
-                    setIsLoginPageInWidow(true)
-                    return
-                }
-            }
-            catch(err){
-                toast(err.message)
-            }
+function ProtectedRoute({ children }) {
+  const navigate = useNavigate();
+  const { setIsLoginPageInWidow } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function grantAccessToken() {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/grant_new_access_token`, {
+          method: "POST",
+          credentials: "include"
+        });
+        const data = await res.json();
+        if (!data.success) {
+          toast(data.msg);
+          return false;
         }
-        checkLoggedInStatus()
-    },[])
-    async function grantAccessToken (){
-        try{
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/grant_new_access_token`,{
-                method : "POST",
-                "credentials" : "include"
-            })
-            const data = await res.json();
-            if(!data.success){
-                toast(data.msg)
-            }
-        }
-        catch(err){
-            toast(err.message)
-        }
+        return true;
+      } catch (err) {
+        toast(err.message);
+        return false;
+      }
     }
 
-  return (
-    <>
-      {children}
-    </>
-  )
+    async function checkLoggedInStatus() {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/logged_in_status`, {
+          method: "GET",
+          credentials: "include"
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          if (data.msg === "no_access_token") {
+            const granted = await grantAccessToken();
+            if (!granted) {
+              if (isMounted) {
+                navigate("/auth");
+                setIsLoginPageInWidow(true);
+              }
+              return;
+            }
+            return checkLoggedInStatus();
+          } else {
+            if (isMounted) {
+              toast(data.msg);
+              navigate("/auth");
+              setIsLoginPageInWidow(true);
+            }
+            return;
+          }
+        }
+      } catch (err) {
+        if (isMounted) toast(err.message);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    checkLoggedInStatus();
+
+    return () => { isMounted = false; }
+  }, [navigate, setIsLoginPageInWidow]);
+
+  if (loading) return null;
+
+  return <>{children}</>;
 }
 
-export default ProtectedRoute
+export default ProtectedRoute;
