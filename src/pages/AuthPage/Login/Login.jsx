@@ -53,6 +53,11 @@ export default function Login() {
         <h2 className="text-2xl font-bold text-center text-purple-600">
           Login to TaskBuddy📝
         </h2>
+        <p class="text-gray-700 text-base leading-relaxed max-w-xl mx-auto text-center">
+          Task Buddy helps you manage tasks easily. Add, track, and complete tasks quickly.
+        </p>
+
+        
 
         <div>
           <label className="block mb-1 text-sm font-medium">Username</label>
@@ -61,6 +66,7 @@ export default function Login() {
             name="username"
             value={formData.username}
             required
+            autoFocus
             onChange={handleChange}
             placeholder="Enter your username"
             className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -107,13 +113,18 @@ export default function Login() {
         </span>
 
         {/* ⚠️ Important Message */}
-        <div className="flex items-center gap-2 bg-yellow-100 text-yellow-700 p-3 rounded-xl text-sm sm:text-base">
-          <AlertCircle size={18} className="flex-shrink-0" />
-          <span className="leading-snug">
-            Please enable <b>third-party cookies</b> in your browser to use our
-            app properly.
-          </span>
-        </div>
+        <div className="flex flex-col gap-2 bg-yellow-100 text-yellow-700 p-3 rounded-xl text-sm sm:text-base">
+  <div className="flex items-center gap-2">
+    <AlertCircle size={18} className="flex-shrink-0" />
+    <span className="leading-snug">
+      Please enable <b>third-party cookies</b> in your browser to use our app properly.
+    </span>
+  </div>
+  <span className="text-yellow-800 font-medium">
+    Note: First response may be delayed by up to a minute.
+  </span>
+</div>
+
       </form>
     </div>
   );

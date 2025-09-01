@@ -50,8 +50,11 @@ export default function Signup() {
         className="bg-white  shadow-lg rounded-2xl p-6 sm:p-8 w-full max-w-md space-y-5"
       >
         <h2 className="text-xl  font-bold text-center text-purple-600 ">
-          Create an Account on TaskBuddy
+          Create an Account on TaskBuddy📝
         </h2>
+        <p class="text-gray-700 text-base leading-relaxed max-w-xl mx-auto text-center">
+          Task Buddy helps you manage tasks easily. Add, track, and complete tasks quickly.
+        </p>
 
         <div>
           <label className="block mb-1 text-sm font-medium">Full Name</label>
