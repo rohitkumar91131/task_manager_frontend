@@ -10,11 +10,18 @@ export default function Header() {
 
   const handleSearchInputChange = (e)=>{
     const value = e.target.value.toLowerCase() ;
+    if(value.trim() === ""){
+      setAllTasks(allUnchangedTask);
+      setInputValue("")
+      return
+    }
     setInputValue(e.target.value)
-    console.log(e.target.value)
+    console.log(value)
     const tasks = [...allUnchangedTask];
     const result = tasks.filter(task => task.content.toLowerCase().includes(value ));
-    setAllTasks(result)
+    console.log(tasks.length);
+    console.log(result.length)
+    setAllTasks(result);
   }
   const handleLogout = async() =>{
     try{

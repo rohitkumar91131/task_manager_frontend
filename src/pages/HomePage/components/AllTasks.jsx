@@ -35,7 +35,8 @@ export default function AllTasks() {
 
     return ()=>{
       setAllTasks([]);
-      setFetching(true)
+      setFetching(true);
+      setUnchangedTask([])
       
     }
   },[reloadAllTask])
@@ -160,8 +161,8 @@ export default function AllTasks() {
                       className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded md:w-auto h-fit"
                       onClick={() => handleTaskDelete(index , task._id)}
                     >
-                      {/* <Trash className="w-4 h-4" /> Delete */}
-                      Delete
+                      <Trash className="w-4 h-4" /> Delete
+
                     </button>
                   </td>
                 </tr>
@@ -190,7 +191,7 @@ export default function AllTasks() {
                   </span>
                   <button
                     className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded h-fit"
-                    onClick={() => handleTaskDelete(index)}
+                    onClick={() => handleTaskDelete(index ,task._id)}
                   >
                     <Trash className="w-4 h-4" /> Delete
                   </button>
