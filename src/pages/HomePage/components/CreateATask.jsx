@@ -6,7 +6,7 @@ export default function CreateATask({ addTask }) {
     const [taskName , setTaskName] = useState("");
   const handleAddTask = () => {
     if (!taskName || taskName.trim() === "") return;
-    setAllTasks(prev => ([...prev  , { content : taskName }]));   
+    setAllTasks(prev => ([ { content : taskName } ,...prev  ]));   
   };
 
   const handleFormSubmit = async(e) =>{
