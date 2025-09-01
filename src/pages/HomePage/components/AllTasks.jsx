@@ -4,7 +4,7 @@ import { Trash } from "lucide-react";
 import { toast } from "react-toastify";
 
 export default function AllTasks() {
-  const { allTasks, setAllTasks } = useTask();
+  const { allTasks, setAllTasks ,setUnchangedTask ,reloadAllTask , setReloadAllTask } = useTask();
   const [loading , setLoading] = useState(true);
 
   useEffect(()=>{
@@ -19,8 +19,8 @@ export default function AllTasks() {
           toast(data.msg)
           return
         }
-        console.log(data)
         setAllTasks(prev => [...prev, ...data.allTasks]);
+        setUnchangedTask(prev => [...prev, ...data.allTasks])
       }
       catch(err){
         toast(err.message)
@@ -30,14 +30,21 @@ export default function AllTasks() {
       }
     }
     getAllTask()
-  },[])
+
+    return ()=>{
+      setAllTasks([]);
+    }
+  },[reloadAllTask])
 
   const handleTaskDelete = (id , taskid) => {
+    if(!id || !taskid) return;
     const tasks = allTasks.filter((_, i) => i !== id);
     setAllTasks(tasks);
+    setUnchangedTask(tasks)
     deleteTaskFromDataBase(taskid)
   };
   const deleteTaskFromDataBase = async(task_id) =>{
+    if(!task_id) return
     try{
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/task/delete_task`,{
         method : "DELETE",
@@ -58,12 +65,17 @@ export default function AllTasks() {
   }
 
   const toggleTaskStatus = (id , taskid ,completed) => {
+    if(!(id+1) || !taskid ){
+      return
+    }
     const updatedTasks = [...allTasks];
     updatedTasks[id].completed = !updatedTasks[id].completed
     setAllTasks(updatedTasks);
+    setUnchangedTask(updatedTasks)
     taskStatusSaveToDb(taskid, completed)
   };
   const taskStatusSaveToDb = async(task_id ,completed)=>{
+    if(!task_id) return;
     try{
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/task/change_completion`,{
         method : "PATCH",

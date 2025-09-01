@@ -5,8 +5,9 @@ import { createContext } from "react";
 const TaskContext = createContext();
 export const TaskProvider = ({children}) =>{
     const [allTasks , setAllTasks] = useState([]);
-
-    return <TaskContext.Provider value={{allTasks , setAllTasks}}>
+    const [reloadAllTask , setReloadAllTask] = useState(false);
+    const [ allUnchangedTask , setUnchangedTask] = useState([]);
+    return <TaskContext.Provider value={{allTasks , setAllTasks ,reloadAllTask , setReloadAllTask , allUnchangedTask , setUnchangedTask}}>
         {children}
     </TaskContext.Provider>
 }

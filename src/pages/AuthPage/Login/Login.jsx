@@ -36,7 +36,7 @@ export default function Login() {
         toast(data.msg);
         return;
       }
-      toast(data.msg);
+
       navigate("/");
     } catch (err) {
       console.log(err.message);

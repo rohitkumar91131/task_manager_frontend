@@ -9,12 +9,15 @@ function ProtectedRoute({children}) {
     useEffect(()=>{
         async function checkLoggedInStatus(){
             try{
-                let res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/logged_in_status`,{
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/logged_in_status`,{
                     method : "GET",
                     "credentials" : "include"
                 })
                 let data = await res.json();
                 if(!data.success){
+                    if(data.msg === "no_access_token"){
+                        grantAccessToken()
+                    }
                     toast(data.msg)
                     navigate("/auth")
                     setIsLoginPageInWidow(true)
@@ -27,6 +30,22 @@ function ProtectedRoute({children}) {
         }
         checkLoggedInStatus()
     },[])
+    async function grantAccessToken (){
+        try{
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/grant_new_access_token`,{
+                method : "POST",
+                "credentials" : "include"
+            })
+            const data = await res.json();
+            if(!data.success){
+                toast(data.msg)
+            }
+        }
+        catch(err){
+            toast(err.message)
+        }
+    }
+
   return (
     <>
       {children}

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTask } from "../../../context/TaskContext";
 import {toast} from 'react-toastify'
 export default function CreateATask({ addTask }) {
-    const {allTasks , setAllTasks} = useTask();
+    const {allTasks , setAllTasks ,reloadAllTask , setReloadAllTask} = useTask();
     const [taskName , setTaskName] = useState("");
   const handleAddTask = () => {
     if (!taskName || taskName.trim() === "") return;
@@ -30,7 +30,8 @@ export default function CreateATask({ addTask }) {
       toast(err.message)
     }
     finally{
-      setTaskName("")
+      setTaskName("");
+      setReloadAllTask(!reloadAllTask);
     }
   }
 
