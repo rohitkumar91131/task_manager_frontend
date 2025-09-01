@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 export default function AllTasks() {
   const { allTasks, setAllTasks ,setUnchangedTask ,reloadAllTask , setReloadAllTask } = useTask();
   const [loading , setLoading] = useState(true);
+  const [fetching , setFetching] = useState(false)
 
   useEffect(()=>{
     async function getAllTask(){
@@ -27,17 +28,20 @@ export default function AllTasks() {
       }
       finally{
         setLoading(false)
+        setFetching(false)
       }
     }
     getAllTask()
 
     return ()=>{
       setAllTasks([]);
+      setFetching(true)
+      
     }
   },[reloadAllTask])
 
   const handleTaskDelete = (id , taskid) => {
-    if(!id || !taskid) return;
+    if(!(id+1) || !taskid) return;
     const tasks = allTasks.filter((_, i) => i !== id);
     setAllTasks(tasks);
     setUnchangedTask(tasks)
@@ -100,6 +104,11 @@ export default function AllTasks() {
   if(loading){
     return <div className="w-[100dvw] h-[50dvh] flex items-center justify-center ">
       Loading...
+    </div>
+  }
+    if(fetching){
+    return <div className="w-[100dvw] h-[50dvh] flex items-center justify-center ">
+      Saving...
     </div>
   }
   return (
