@@ -69,7 +69,7 @@ function ProtectedRoute({ children }) {
     return () => { isMounted = false; }
   }, [navigate, setIsLoginPageInWidow]);
 
-  if (loading) return null;
+  if (loading) return <div className="w-[100dvw] h-[100dvh] flex items-center justify-center animate-pulse font-md text-3xl ">Verifying...</div>;
 
   return <>{children}</>;
 }
