@@ -6,6 +6,7 @@ import Header from './Ui/Header'
 import { TaskProvider } from './context/TaskContext'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
+import LandingPage from "./pages/AuthPage/LandingPage/LandingPage";
 export default function App(){
   return (
     <BrowserRouter>
@@ -22,7 +23,8 @@ export default function App(){
         theme="colored"
       />
        <Routes>
-          <Route path='/' element={<ProtectedRoute><Home/> </ProtectedRoute>} />
+          <Route path="/" element={<LandingPage/>} />
+          <Route path='/tasks' element={<ProtectedRoute><Home/> </ProtectedRoute>} />
           <Route  path='/:auth' element={<Auth/>}/>
        </Routes>
     </TaskProvider> 

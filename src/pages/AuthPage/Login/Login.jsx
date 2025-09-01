@@ -28,7 +28,7 @@ export default function Login() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
-          credentials: "include", // ✅ correct place
+          credentials: "include", 
         }
       );
       let data = await res.json();
@@ -37,7 +37,7 @@ export default function Login() {
         return;
       }
 
-      navigate("/");
+      navigate("/tasks");
     } catch (err) {
       console.log(err.message);
       toast(err.message);
